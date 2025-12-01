@@ -14,6 +14,8 @@ void main() async {
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
     androidStopForegroundOnPause: false,
+    androidNotificationClickStartsActivity: true,
+    notificationColor: const Color(0xFF4527A0),
   );
 
   await SystemChrome.setPreferredOrientations([
