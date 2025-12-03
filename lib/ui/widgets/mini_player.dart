@@ -141,7 +141,8 @@ class MiniPlayer extends StatelessWidget {
                       color: Colors.white,
                     ),
                   );
-                } else if (isPlayingLive) {
+                } else if (isPlayingLive &&
+                    processing != ProcessingState.completed) {
                   icon = const Icon(
                     Icons.pause_rounded,
                     color: Colors.white,

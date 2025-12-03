@@ -250,10 +250,10 @@ class PlaylistsScreen extends StatelessWidget {
                   artist: currentSong.artist,
                   albumArt: currentSong.albumArt,
                   albumArtPath: currentSong.albumArtPath,
-                  isPlaying: playbackProvider.player.playing,
+                  isPlaying: playbackProvider.isActuallyPlaying,
                   heroTag: "current-song-art-${playbackProvider.currentIndex}",
                   onPlayPause: () {
-                    if (playbackProvider.player.playing) {
+                    if (playbackProvider.isActuallyPlaying) {
                       playbackProvider.pause();
                     } else {
                       playbackProvider.play();

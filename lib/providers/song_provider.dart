@@ -23,6 +23,10 @@ class SongProvider extends ChangeNotifier {
   Set<String> _manualFolders = {}; // User-added paths
   List<Song> _allSongs = []; // Store all songs to derive folders
 
+  // Selection mode for bulk operations
+  bool _selectionMode = false;
+  Set<String> _selectedSongs = {};
+
   List<Song> get songs {
     if (_showFavoritesOnly) {
       return _songs.where((s) => _favorites.contains(s.path)).toList();
@@ -35,6 +39,12 @@ class SongProvider extends ChangeNotifier {
   bool get showFavoritesOnly => _showFavoritesOnly;
   bool get filterShortSongs => _filterShortSongs;
   Set<String> get excludedFolders => _excludedFolders;
+
+  // Selection mode getters
+  bool get selectionMode => _selectionMode;
+  Set<String> get selectedSongs => _selectedSongs;
+  int get selectedCount => _selectedSongs.length;
+  bool isSongSelected(String path) => _selectedSongs.contains(path);
 
   // Combined list for UI: Detected + Excluded + Manual
   Map<String, int> get managedFolders {
@@ -318,5 +328,61 @@ class SongProvider extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  // Selection mode methods
+  void enterSelectionMode(String songPath) {
+    _selectionMode = true;
+    _selectedSongs.clear();
+    _selectedSongs.add(songPath);
+    notifyListeners();
+  }
+
+  void exitSelectionMode() {
+    _selectionMode = false;
+    _selectedSongs.clear();
+    notifyListeners();
+  }
+
+  void toggleSongSelection(String path) {
+    if (_selectedSongs.contains(path)) {
+      _selectedSongs.remove(path);
+      // Auto-exit if no songs selected
+      if (_selectedSongs.isEmpty) {
+        _selectionMode = false;
+      }
+    } else {
+      _selectedSongs.add(path);
+    }
+    notifyListeners();
+  }
+
+  void selectAllSongs() {
+    _selectedSongs.clear();
+    _selectedSongs.addAll(songs.map((s) => s.path));
+    notifyListeners();
+  }
+
+  Future<int> deleteSelectedSongs() async {
+    int deletedCount = 0;
+    final pathsToDelete = List<String>.from(_selectedSongs);
+
+    for (final path in pathsToDelete) {
+      final song = _songs.firstWhere(
+        (s) => s.path == path,
+        orElse: () => _allSongs.firstWhere((s) => s.path == path),
+      );
+      final success = await _audioHandler.deleteAudioFile(path);
+      if (success) {
+        _songs.removeWhere((s) => s.path == path);
+        _allSongs.removeWhere((s) => s.path == path);
+        _favorites.remove(path);
+        deletedCount++;
+      }
+    }
+
+    exitSelectionMode();
+    notifyListeners();
+    return deletedCount;
   }
 }

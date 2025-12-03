@@ -6,6 +6,8 @@ import '../widgets/song_list_tile.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/search_delegate.dart';
 import '../widgets/add_to_playlist_dialog.dart';
+import '../widgets/bulk_action_bar.dart';
+import '../widgets/bulk_add_to_playlist_dialog.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
 import 'playlists_screen.dart';
@@ -85,51 +87,57 @@ class _HomeScreenState extends State<HomeScreen>
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[900],
-        elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: Colors.white, size: 28),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        title: Text(
-          songProvider.showFavoritesOnly ? 'Favorites' : 'Your Library',
-          style: const TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: SongSearchDelegate(songs, playbackProvider),
-              );
-            },
-          ),
-          PopupMenuButton<SortOption>(
-            icon: const Icon(Icons.sort_rounded, color: Colors.white),
-            onSelected: (option) {
-              songProvider.sortSongs(option);
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: SortOption.dateAdded,
-                child: Text("Date Added (Newest)"),
+      appBar: songProvider.selectionMode
+          ? null
+          : AppBar(
+              backgroundColor: Colors.grey[900],
+              elevation: 0,
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(
+                    Icons.menu_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
-              const PopupMenuItem(
-                value: SortOption.title,
-                child: Text("Title (A-Z)"),
+              title: Text(
+                songProvider.showFavoritesOnly ? 'Favorites' : 'Your Library',
+                style: const TextStyle(color: Colors.white),
               ),
-              const PopupMenuItem(
-                value: SortOption.artist,
-                child: Text("Artist (A-Z)"),
-              ),
-            ],
-          ),
-        ],
-      ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search, color: Colors.white),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: SongSearchDelegate(songs, playbackProvider),
+                    );
+                  },
+                ),
+                PopupMenuButton<SortOption>(
+                  icon: const Icon(Icons.sort_rounded, color: Colors.white),
+                  onSelected: (option) {
+                    songProvider.sortSongs(option);
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: SortOption.dateAdded,
+                      child: Text("Date Added (Newest)"),
+                    ),
+                    const PopupMenuItem(
+                      value: SortOption.title,
+                      child: Text("Title (A-Z)"),
+                    ),
+                    const PopupMenuItem(
+                      value: SortOption.artist,
+                      child: Text("Artist (A-Z)"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
       drawer: Drawer(
         child: Container(
           color: Colors.grey[900],
@@ -424,7 +432,12 @@ class _HomeScreenState extends State<HomeScreen>
                         children: [
                           ListView.builder(
                             controller: _scrollController,
-                            padding: const EdgeInsets.only(bottom: 80),
+                            padding: EdgeInsets.only(
+                              top: songProvider.selectionMode
+                                  ? MediaQuery.of(context).padding.top + 90
+                                  : 0,
+                              bottom: songProvider.selectionMode ? 80 : 80,
+                            ),
                             itemCount: songs.length,
                             itemBuilder: (context, index) {
                               final song = songs[index];
@@ -447,78 +460,47 @@ class _HomeScreenState extends State<HomeScreen>
                                   duration: _formatDuration(song.duration),
                                   albumArt: song.albumArt,
                                   albumArtPath: song.albumArtPath,
+                                  selectionMode: songProvider.selectionMode,
+                                  isSelected: songProvider.isSongSelected(
+                                    song.path,
+                                  ),
                                   onTap: () {
-                                    playbackProvider.setPlaylist(songs, index);
-                                    Navigator.push(
-                                      context,
-                                      PlayerScreen.route(),
-                                    );
+                                    if (songProvider.selectionMode) {
+                                      // In selection mode, toggle selection
+                                      songProvider.toggleSongSelection(
+                                        song.path,
+                                      );
+                                    } else {
+                                      // Normal mode, play the song
+                                      playbackProvider.setPlaylist(
+                                        songs,
+                                        index,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        PlayerScreen.route(),
+                                      );
+                                    }
                                   },
-                                  onMenuTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) => AddToPlaylistDialog(
-                                        songPath: song.path,
-                                      ),
-                                    );
-                                  },
+                                  onMenuTap: songProvider.selectionMode
+                                      ? null
+                                      : () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            backgroundColor: Colors.transparent,
+                                            builder: (context) =>
+                                                AddToPlaylistDialog(
+                                                  songPath: song.path,
+                                                ),
+                                          );
+                                        },
                                   onLongPress: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        backgroundColor: Colors.grey[900],
-                                        title: const Text(
-                                          "Delete Song",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        content: Text(
-                                          "Are you sure you want to delete '${song.title}' from your device?",
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            child: const Text("Cancel"),
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                          ),
-                                          TextButton(
-                                            child: const Text(
-                                              "Delete",
-                                              style: TextStyle(
-                                                color: Colors.redAccent,
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              Navigator.pop(context);
-                                              final success = await songProvider
-                                                  .deleteSong(song);
-                                              if (mounted) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      success
-                                                          ? "Deleted '${song.title}'"
-                                                          : "Failed to delete song",
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                    backgroundColor: success
-                                                        ? Colors.redAccent
-                                                        : Colors.grey[800],
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    // Enter selection mode on long press
+                                    if (!songProvider.selectionMode) {
+                                      songProvider.enterSelectionMode(
+                                        song.path,
+                                      );
+                                    }
                                   },
                                 ),
                               );
@@ -614,10 +596,10 @@ class _HomeScreenState extends State<HomeScreen>
                   artist: currentSong.artist,
                   albumArt: currentSong.albumArt,
                   albumArtPath: currentSong.albumArtPath,
-                  isPlaying: playbackProvider.player.playing,
+                  isPlaying: playbackProvider.isActuallyPlaying,
                   heroTag: "current-song-art-${playbackProvider.currentIndex}",
                   onPlayPause: () {
-                    if (playbackProvider.player.playing) {
+                    if (playbackProvider.isActuallyPlaying) {
                       playbackProvider.pause();
                     } else {
                       playbackProvider.play();
@@ -626,6 +608,82 @@ class _HomeScreenState extends State<HomeScreen>
                   onNext: playbackProvider.skipToNext,
                   onTap: () {
                     Navigator.push(context, PlayerScreen.route());
+                  },
+                ),
+              ),
+            ),
+          // Bulk Action Bar for selection mode
+          if (songProvider.selectionMode)
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              child: SafeArea(
+                child: BulkActionBar(
+                  selectedCount: songProvider.selectedCount,
+                  onAddToPlaylist: () {
+                    final selectedPaths = List<String>.from(
+                      songProvider.selectedSongs,
+                    );
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) =>
+                          BulkAddToPlaylistDialog(songPaths: selectedPaths),
+                    ).then((_) {
+                      // Exit selection mode after adding to playlist
+                      songProvider.exitSelectionMode();
+                    });
+                  },
+                  onDelete: () {
+                    final count = songProvider.selectedCount;
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: Colors.grey[900],
+                        title: const Text(
+                          'Delete Songs',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        content: Text(
+                          'Are you sure you want to delete $count song${count > 1 ? 's' : ''} from your device?',
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              final deletedCount = await songProvider
+                                  .deleteSelectedSongs();
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Deleted $deletedCount song${deletedCount > 1 ? 's' : ''}',
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.redAccent),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  onSelectAll: () {
+                    songProvider.selectAllSongs();
+                  },
+                  onCancel: () {
+                    songProvider.exitSelectionMode();
                   },
                 ),
               ),

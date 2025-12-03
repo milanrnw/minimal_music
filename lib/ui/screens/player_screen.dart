@@ -401,8 +401,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                   );
                                 } else {
                                   return _buildControlButton(
-                                    onPressed: () =>
-                                        audioPlayer.seek(Duration.zero),
+                                    onPressed: playbackService.play,
                                     child: const Icon(
                                       Icons.replay_rounded,
                                       color: Colors.white,

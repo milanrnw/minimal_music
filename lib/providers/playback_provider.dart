@@ -23,6 +23,12 @@ class PlaybackProvider extends ChangeNotifier {
       ? _playlist[currentIndex]
       : null;
 
+  // Check if audio is truly playing (not paused and not completed)
+  bool get isActuallyPlaying {
+    return player.playing &&
+        player.processingState != ProcessingState.completed;
+  }
+
   PlaybackProvider() {
     player.currentIndexStream.listen((index) {
       if (index != null) {
@@ -41,6 +47,12 @@ class PlaybackProvider extends ChangeNotifier {
 
     player.loopModeStream.listen((mode) {
       notifyListeners();
+    });
+    player.processingStateStream.listen((state) {
+      // When playlist completes, ensure UI updates
+      if (state == ProcessingState.completed) {
+        notifyListeners();
+      }
     });
 
     _loadLastState();
@@ -143,7 +155,11 @@ class PlaybackProvider extends ChangeNotifier {
     }
   }
 
-  void play() {
+  void play() async {
+    // If playlist completed, restart from the beginning
+    if (player.processingState == ProcessingState.completed) {
+      await player.seek(Duration.zero, index: 0);
+    }
     player.play();
     notifyListeners();
   }

@@ -11,6 +11,8 @@ class SongListTile extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
   final VoidCallback? onMenuTap;
+  final bool selectionMode;
+  final bool isSelected;
 
   const SongListTile({
     Key? key,
@@ -22,6 +24,8 @@ class SongListTile extends StatelessWidget {
     required this.onTap,
     this.onLongPress,
     this.onMenuTap,
+    this.selectionMode = false,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -77,14 +81,35 @@ class SongListTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Padding(
+      child: Container(
+        color: isSelected
+            ? Colors.deepPurpleAccent.withOpacity(0.15)
+            : Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: SizedBox(width: 55, height: 55, child: artWidget),
-            ),
+            // Show checkbox in selection mode, otherwise album art
+            if (selectionMode)
+              Container(
+                width: 55,
+                height: 55,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Colors.deepPurpleAccent
+                      : Colors.grey[800],
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Icon(
+                  isSelected ? Icons.check : null,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              )
+            else
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: SizedBox(width: 55, height: 55, child: artWidget),
+              ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -114,7 +139,7 @@ class SongListTile extends StatelessWidget {
               duration,
               style: TextStyle(color: Colors.grey[500], fontSize: 13),
             ),
-            if (onMenuTap != null) ...[
+            if (onMenuTap != null && !selectionMode) ...[
               const SizedBox(width: 8),
               IconButton(
                 icon: const Icon(
