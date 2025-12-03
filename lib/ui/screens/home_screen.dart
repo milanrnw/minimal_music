@@ -5,8 +5,10 @@ import '../../providers/playback_provider.dart';
 import '../widgets/song_list_tile.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/search_delegate.dart';
+import '../widgets/add_to_playlist_dialog.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
+import 'playlists_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -266,6 +268,20 @@ class _HomeScreenState extends State<HomeScreen>
                         songProvider.setShowFavoritesOnly(true);
                       },
                     ),
+                    ListTile(
+                      leading: const Icon(
+                        Icons.playlist_play_rounded,
+                        color: Colors.white70,
+                      ),
+                      title: const Text(
+                        "Playlists",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, PlaylistsScreen.route());
+                      },
+                    ),
                     const Divider(color: Colors.white10),
                     ListTile(
                       leading: const Icon(
@@ -436,6 +452,15 @@ class _HomeScreenState extends State<HomeScreen>
                                     Navigator.push(
                                       context,
                                       PlayerScreen.route(),
+                                    );
+                                  },
+                                  onMenuTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) => AddToPlaylistDialog(
+                                        songPath: song.path,
+                                      ),
                                     );
                                   },
                                   onLongPress: () {

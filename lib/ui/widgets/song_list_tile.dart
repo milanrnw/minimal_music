@@ -9,6 +9,8 @@ class SongListTile extends StatelessWidget {
   final Uint8List? albumArt;
   final String? albumArtPath;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
+  final VoidCallback? onMenuTap;
 
   const SongListTile({
     Key? key,
@@ -19,9 +21,8 @@ class SongListTile extends StatelessWidget {
     this.albumArtPath,
     required this.onTap,
     this.onLongPress,
+    this.onMenuTap,
   }) : super(key: key);
-
-  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +114,19 @@ class SongListTile extends StatelessWidget {
               duration,
               style: TextStyle(color: Colors.grey[500], fontSize: 13),
             ),
+            if (onMenuTap != null) ...[
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: Colors.white70,
+                  size: 20,
+                ),
+                onPressed: onMenuTap,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
           ],
         ),
       ),

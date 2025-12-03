@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_app/providers/playback_provider.dart';
 import 'package:music_player_app/providers/song_provider.dart';
+import 'package:music_player_app/providers/playlist_provider.dart';
 import 'package:music_player_app/ui/screens/home_screen.dart';
 
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => PlaybackProvider()),
         ChangeNotifierProvider(create: (_) => SongProvider()),
+        ChangeNotifierProvider(create: (_) => PlaylistProvider()),
       ],
       child: const MyApp(),
     ),
