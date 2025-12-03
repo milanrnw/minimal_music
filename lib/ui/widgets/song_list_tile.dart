@@ -89,27 +89,29 @@ class SongListTile extends StatelessWidget {
         child: Row(
           children: [
             // Show checkbox in selection mode, otherwise album art
-            if (selectionMode)
-              Container(
-                width: 55,
-                height: 55,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? Colors.deepPurpleAccent
-                      : Colors.grey[800],
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
+                  child: SizedBox(width: 55, height: 55, child: artWidget),
                 ),
-                child: Icon(
-                  isSelected ? Icons.check : null,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              )
-            else
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: SizedBox(width: 55, height: 55, child: artWidget),
-              ),
+                if (selectionMode && isSelected)
+                  Container(
+                    width: 55,
+                    height: 55,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurpleAccent.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+              ],
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
