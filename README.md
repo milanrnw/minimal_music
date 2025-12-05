@@ -20,7 +20,9 @@ Minimal Music is designed to provide a seamless listening experience:
 
 Here's a sneak peek at the clean and user-friendly interface of Minimal Music.
 
-![App Screenshots](assets/screenshots/preview.png)
+![App Screenshots Part 1](assets/screenshots/preview.png)
+
+![App Screenshots Part 2](assets/screenshots/preview_2.png)
 
 ## Tech Stack
 
