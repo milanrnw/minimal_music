@@ -137,16 +137,22 @@ class PlaylistDetailScreen extends StatelessWidget {
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: () {
-                        playlistProvider.deletePlaylist(playlistId);
+                      onPressed: () async {
+                        // Close the dialog first
                         Navigator.pop(context);
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Playlist deleted'),
-                            backgroundColor: Colors.redAccent,
-                          ),
-                        );
+
+                        await playlistProvider.deletePlaylist(playlistId);
+
+                        if (context.mounted) {
+                          // Close the screen
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Playlist deleted'),
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                        }
                       },
                       child: const Text(
                         'Delete',
@@ -211,6 +217,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: ReorderableListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.only(
                           bottom: playbackProvider.currentSong != null
                               ? 92

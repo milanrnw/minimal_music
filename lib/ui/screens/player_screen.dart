@@ -494,10 +494,10 @@ class _LyricsCardState extends State<_LyricsCard> {
     final saved = await _audioService.getLyrics(widget.song.path);
     final initial = saved ?? widget.song.lyrics;
 
-    if (mounted && saved != null) {
+    if (mounted) {
       setState(() {
-        _lyrics = saved;
-        _controller.text = saved;
+        _lyrics = initial;
+        _controller.text = initial ?? '';
       });
     }
   }

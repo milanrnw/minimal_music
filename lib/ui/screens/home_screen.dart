@@ -432,6 +432,7 @@ class _HomeScreenState extends State<HomeScreen>
                       return Stack(
                         children: [
                           ListView.builder(
+                            physics: const BouncingScrollPhysics(),
                             controller: _scrollController,
                             padding: EdgeInsets.only(
                               top: songProvider.selectionMode

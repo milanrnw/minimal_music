@@ -80,6 +80,7 @@ class SongSearchDelegate extends SearchDelegate {
               ),
             )
           : ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: results.length,
               itemBuilder: (context, index) {
                 final song = results[index];

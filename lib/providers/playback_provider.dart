@@ -68,11 +68,31 @@ class PlaybackProvider extends ChangeNotifier {
   }) async {
     if (songs.isEmpty) return;
 
+    Duration? initialPos;
+    // Check if we are playing the same song from the same playlist context.
     if (currentSong != null && currentSong!.path == songs[startIndex].path) {
-      if (!player.playing && autoPlay) {
-        player.play();
+      bool sameQueue = true;
+      if (_playlist.length == songs.length) {
+        for (int i = 0; i < songs.length; i++) {
+          if (_playlist[i].path != songs[i].path) {
+            sameQueue = false;
+            break;
+          }
+        }
+      } else {
+        sameQueue = false;
       }
-      return;
+
+      if (sameQueue) {
+        if (!player.playing && autoPlay) {
+          player.play();
+        }
+        return;
+      }
+
+      // Context switch: Same song, new queue.
+      // Preserve current position so it doesn't restart from 0:00.
+      initialPos = player.position;
     }
 
     _playlist = songs;
@@ -101,6 +121,7 @@ class PlaybackProvider extends ChangeNotifier {
       await player.setAudioSource(
         playlistSource,
         initialIndex: startIndex.clamp(0, songs.length - 1),
+        initialPosition: initialPos,
       );
 
       if (autoPlay) {
