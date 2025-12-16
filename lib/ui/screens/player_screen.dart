@@ -132,6 +132,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           actions: [],
         ),
         body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverFillRemaining(
               hasScrollBody: false,
@@ -545,23 +546,22 @@ class _LyricsCardState extends State<_LyricsCard> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (!_isEditing)
-                  IconButton(
-                    icon: Icon(
-                      _isEditing ? Icons.save_rounded : Icons.edit_rounded,
-                      color: Colors.deepPurpleAccent,
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      if (_isEditing) {
-                        _saveLyrics();
-                      } else {
-                        setState(() => _isEditing = true);
-                      }
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
+                IconButton(
+                  icon: Icon(
+                    _isEditing ? Icons.save_rounded : Icons.edit_rounded,
+                    color: Colors.deepPurpleAccent,
+                    size: 20,
                   ),
+                  onPressed: () {
+                    if (_isEditing) {
+                      _saveLyrics();
+                    } else {
+                      setState(() => _isEditing = true);
+                    }
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
               ],
             ),
             const SizedBox(height: 8),

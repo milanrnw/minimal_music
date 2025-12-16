@@ -12,8 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
-    androidNotificationChannelName: 'Audio playback',
+    androidNotificationChannelId: 'com.example.minimal_music.channel.audio',
+    androidNotificationChannelName: 'Minimal Music Playback',
     androidStopForegroundOnPause: false,
     androidNotificationClickStartsActivity: true,
     notificationColor: const Color(0xFF4527A0),

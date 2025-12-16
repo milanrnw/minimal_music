@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/providers/playlist_provider.dart';
 import 'package:music_player_app/ui/widgets/add_to_playlist_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../providers/song_provider.dart';
@@ -650,10 +651,26 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                           TextButton(
                             onPressed: () async {
+                              final selectedPaths = List<String>.from(
+                                songProvider.selectedSongs,
+                              );
                               Navigator.pop(dialogContext);
                               final deletedCount = await songProvider
                                   .deleteSelectedSongs();
-                              if (mounted) {
+
+                              if (deletedCount > 0) {
+                                final playlistProvider =
+                                    Provider.of<PlaylistProvider>(
+                                      context,
+                                      listen: false,
+                                    );
+                                for (final path in selectedPaths) {
+                                  await playlistProvider
+                                      .removeSongFromAllPlaylists(path);
+                                }
+                              }
+
+                              if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(

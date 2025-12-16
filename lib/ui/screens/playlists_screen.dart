@@ -45,19 +45,31 @@ class PlaylistsScreen extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               if (controller.text.trim().isNotEmpty) {
-                Provider.of<PlaylistProvider>(
+                final success = await Provider.of<PlaylistProvider>(
                   context,
                   listen: false,
                 ).createPlaylist(controller.text.trim());
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Playlist created'),
-                    backgroundColor: Colors.deepPurpleAccent,
-                  ),
-                );
+
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Playlist created'),
+                        backgroundColor: Colors.deepPurpleAccent,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Playlist with this name already exists'),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  }
+                }
               }
             },
             child: const Text(

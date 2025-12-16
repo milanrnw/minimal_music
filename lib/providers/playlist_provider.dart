@@ -46,8 +46,15 @@ class PlaylistProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> createPlaylist(String name) async {
-    if (name.trim().isEmpty) return;
+  Future<bool> createPlaylist(String name) async {
+    if (name.trim().isEmpty) return false;
+
+    // Check for duplicates
+    if (_playlists.any(
+      (p) => p.name.toLowerCase() == name.trim().toLowerCase(),
+    )) {
+      return false;
+    }
 
     final now = DateTime.now();
     final playlist = Playlist(
@@ -61,6 +68,26 @@ class PlaylistProvider extends ChangeNotifier {
     _playlists.add(playlist);
     notifyListeners();
     await _savePlaylists();
+    return true;
+  }
+
+  Future<void> removeSongFromAllPlaylists(String songPath) async {
+    bool changed = false;
+    for (int i = 0; i < _playlists.length; i++) {
+      if (_playlists[i].songPaths.contains(songPath)) {
+        final updatedPaths = List<String>.from(_playlists[i].songPaths)
+          ..remove(songPath);
+        _playlists[i] = _playlists[i].copyWith(
+          songPaths: updatedPaths,
+          modifiedAt: DateTime.now(),
+        );
+        changed = true;
+      }
+    }
+    if (changed) {
+      notifyListeners();
+      await _savePlaylists();
+    }
   }
 
   Future<void> deletePlaylist(String id) async {

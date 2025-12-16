@@ -50,7 +50,22 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                   context,
                   listen: false,
                 );
-                await playlistProvider.createPlaylist(controller.text.trim());
+                final success = await playlistProvider.createPlaylist(
+                  controller.text.trim(),
+                );
+
+                if (!success) {
+                  if (mounted) {
+                    Navigator.pop(context); // Close dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Playlist with this name already exists'),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  }
+                  return;
+                }
 
                 final newPlaylist = playlistProvider.playlists.last;
 

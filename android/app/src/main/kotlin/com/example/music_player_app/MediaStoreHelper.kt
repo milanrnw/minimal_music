@@ -123,28 +123,22 @@ class MediaStoreHelper : FlutterPlugin, MethodCallHandler, ActivityAware, Plugin
                 result.error("INTENT_ERROR", "Failed to launch delete confirmation", ex.message)
             }
         } else {
-            // For Android 10 and below, we have to delete one by one or use the old method.
-            // Since we want to support bulk delete, we'll try to delete all and report success if all deleted.
-            // However, Android 10 might throw RecoverableSecurityException for each file.
-            // This is a limitation on Android 10. For now, we'll iterate.
-            // But to avoid multiple popups on Android 10, we can't really do much without complex logic.
-            // Fortunately, most users are on Android 11+ where createDeleteRequest works.
-            // We will fallback to single deletion logic for older versions if needed, but for now let's try loop.
-            // Actually, for Android 10, we should probably just fail or warn.
-            // But let's try to delete and if exception, we handle it.
-            // A better approach for < R is to just call deleteSong for each, but that causes multiple popups.
-            // Since the user specifically asked for "one popup", this is mainly for Android 11+.
-            
-            // Fallback for < Android 11:
-            var allSuccess = true
+            // Android 10 (Q) and below fallback
+            // We iterate and delete one by one.
+            // On Android 10, this might still trigger a RecoverableSecurityException for each file if not owned by app.
+            // But this is the best effort for "bulk" without R's createDeleteRequest.
+            var successCount = 0
             for (uri in uris) {
                  try {
-                    context.contentResolver.delete(uri, null, null)
+                    val deleted = context.contentResolver.delete(uri, null, null)
+                    if (deleted > 0) successCount++
                 } catch (e: Exception) {
-                    allSuccess = false
+                    // Ignore individual failures in bulk operation for pre-R
                 }
             }
-            result.success(allSuccess)
+            // If we deleted at least one, we consider it a partial success or just return true.
+            // For better UX, we might want to return exact count, but method expects boolean.
+            result.success(successCount > 0)
         }
     }
 

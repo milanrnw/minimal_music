@@ -260,6 +260,71 @@ class PlaylistDetailScreen extends StatelessWidget {
                                 playbackProvider.setPlaylist(songs, index);
                                 Navigator.push(context, PlayerScreen.route());
                               },
+                              onMenuTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) => Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[900],
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          width: 40,
+                                          height: 4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white24,
+                                            borderRadius: BorderRadius.circular(
+                                              2,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.remove_circle_outline_rounded,
+                                            color: Colors.redAccent,
+                                          ),
+                                          title: const Text(
+                                            "Remove from playlist",
+                                            style: TextStyle(
+                                              color: Colors.redAccent,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(
+                                              context,
+                                            ); // Close sheet
+                                            playlistProvider
+                                                .removeSongFromPlaylist(
+                                                  playlistId,
+                                                  song.path,
+                                                );
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Removed "${song.title}"',
+                                                ),
+                                                backgroundColor:
+                                                    Colors.grey[800],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
                               onLongPress: () {},
                             ),
                           );

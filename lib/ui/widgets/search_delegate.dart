@@ -3,6 +3,7 @@ import '../../models/song_model.dart';
 import '../../providers/playback_provider.dart';
 import '../screens/player_screen.dart';
 import 'song_list_tile.dart';
+import 'add_to_playlist_dialog.dart';
 
 class SongSearchDelegate extends SearchDelegate {
   final List<Song> songs;
@@ -95,6 +96,15 @@ class SongSearchDelegate extends SearchDelegate {
                       playbackProvider.setPlaylist(songs, originalIndex);
                       Navigator.push(context, PlayerScreen.route());
                     }
+                  },
+                  onMenuTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) =>
+                          AddToPlaylistDialog(songPath: song.path),
+                    );
                   },
                 );
               },
