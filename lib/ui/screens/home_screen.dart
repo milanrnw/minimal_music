@@ -443,65 +443,44 @@ class _HomeScreenState extends State<HomeScreen>
                             itemCount: songs.length,
                             itemBuilder: (context, index) {
                               final song = songs[index];
-                              return AnimatedBuilder(
-                                animation: _fadeAnimation,
-                                builder: (context, child) =>
-                                    Transform.translate(
-                                      offset: Offset(
-                                        0,
-                                        20 * (1 - _fadeAnimation.value),
-                                      ),
-                                      child: Opacity(
-                                        opacity: _fadeAnimation.value,
-                                        child: child,
-                                      ),
-                                    ),
-                                child: SongListTile(
-                                  title: song.title,
-                                  artist: song.artist,
-                                  duration: _formatDuration(song.duration),
-                                  albumArt: song.albumArt,
-                                  albumArtPath: song.albumArtPath,
-                                  selectionMode: songProvider.selectionMode,
-                                  isSelected: songProvider.isSongSelected(
-                                    song.path,
-                                  ),
-                                  onTap: () {
-                                    if (songProvider.selectionMode) {
-                                      songProvider.toggleSongSelection(
-                                        song.path,
-                                      );
-                                    } else {
-                                      playbackProvider.setPlaylist(
-                                        songs,
-                                        index,
-                                      );
-                                      Navigator.push(
-                                        context,
-                                        PlayerScreen.route(),
-                                      );
-                                    }
-                                  },
-                                  onMenuTap: songProvider.selectionMode
-                                      ? null
-                                      : () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            backgroundColor: Colors.transparent,
-                                            builder: (context) =>
-                                                AddToPlaylistDialog(
-                                                  songPath: song.path,
-                                                ),
-                                          );
-                                        },
-                                  onLongPress: () {
-                                    if (!songProvider.selectionMode) {
-                                      songProvider.enterSelectionMode(
-                                        song.path,
-                                      );
-                                    }
-                                  },
+                              return SongListTile(
+                                title: song.title,
+                                artist: song.artist,
+                                duration: _formatDuration(song.duration),
+                                albumArt: song.albumArt,
+                                albumArtPath: song.albumArtPath,
+                                selectionMode: songProvider.selectionMode,
+                                isSelected: songProvider.isSongSelected(
+                                  song.path,
                                 ),
+                                onTap: () {
+                                  if (songProvider.selectionMode) {
+                                    songProvider.toggleSongSelection(song.path);
+                                  } else {
+                                    playbackProvider.setPlaylist(songs, index);
+                                    Navigator.push(
+                                      context,
+                                      PlayerScreen.route(),
+                                    );
+                                  }
+                                },
+                                onMenuTap: songProvider.selectionMode
+                                    ? null
+                                    : () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) =>
+                                              AddToPlaylistDialog(
+                                                songPath: song.path,
+                                              ),
+                                        );
+                                      },
+                                onLongPress: () {
+                                  if (!songProvider.selectionMode) {
+                                    songProvider.enterSelectionMode(song.path);
+                                  }
+                                },
                               );
                             },
                           ),

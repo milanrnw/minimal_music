@@ -257,6 +257,14 @@ class SongProvider extends ChangeNotifier {
     await checkPermission();
 
     if (_hasPermission) {
+      // User Request: Disable auto-scan on startup if we have data.
+      // Only scan if explicitly requested (Refresh) or if the library is empty.
+      if (!fromUser && _allSongs.isNotEmpty) {
+        _isScanning = false;
+        notifyListeners();
+        return;
+      }
+
       _isScanning = true;
       _scannedSongsCount = 0;
       notifyListeners();
