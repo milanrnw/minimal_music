@@ -50,7 +50,7 @@ class SongListTile extends StatelessWidget {
           );
         },
       );
-    } else if (albumArtPath != null && File(albumArtPath!).existsSync()) {
+    } else if (albumArtPath != null) {
       artWidget = Image.file(
         File(albumArtPath!),
         width: 55,

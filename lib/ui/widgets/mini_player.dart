@@ -50,7 +50,7 @@ class MiniPlayer extends StatelessWidget {
           );
         },
       );
-    } else if (albumArtPath != null && File(albumArtPath!).existsSync()) {
+    } else if (albumArtPath != null) {
       artWidget = Image.file(
         File(albumArtPath!),
         fit: BoxFit.cover,

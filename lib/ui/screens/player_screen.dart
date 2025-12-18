@@ -83,8 +83,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           );
         },
       );
-    } else if (currentSong.albumArtPath != null &&
-        File(currentSong.albumArtPath!).existsSync()) {
+    } else if (currentSong.albumArtPath != null) {
       artWidget = Image.file(
         File(currentSong.albumArtPath!),
         width: MediaQuery.of(context).size.width * 0.9,
@@ -264,11 +263,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             Slider(
                               value: _isDragging
                                   ? _dragValue
-                                  : position.inSeconds.toDouble().clamp(
+                                  : position.inMilliseconds.toDouble().clamp(
                                       0.0,
-                                      duration.inSeconds.toDouble(),
+                                      duration.inMilliseconds.toDouble(),
                                     ),
-                              max: duration.inSeconds.toDouble(),
+                              max: duration.inMilliseconds.toDouble(),
                               onChangeStart: (value) {
                                 setState(() {
                                   _isDragging = true;
@@ -282,7 +281,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               },
                               onChangeEnd: (value) {
                                 audioPlayer.seek(
-                                  Duration(seconds: value.toInt()),
+                                  Duration(milliseconds: value.toInt()),
                                 );
                                 setState(() {
                                   _isDragging = false;
@@ -300,7 +299,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    _formatDuration(position),
+                                    _formatDuration(
+                                      _isDragging
+                                          ? Duration(
+                                              milliseconds: _dragValue.toInt(),
+                                            )
+                                          : position,
+                                    ),
                                     style: TextStyle(
                                       color: Colors.grey[500],
                                       fontSize: 13,
