@@ -42,8 +42,7 @@ dependencies:
   path_provider: ^2.1.5
   audio_service: ^0.18.15
   file_picker: ^10.3.7
-  flutter_media_metadata:
-    path: ./packages/flutter_media_metadata
+  flutter_media_metadata: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

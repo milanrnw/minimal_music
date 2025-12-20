@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/playlist_provider.dart';
+import '../../providers/playback_provider.dart';
 
 class AddToPlaylistDialog extends StatefulWidget {
   final String songPath;
@@ -204,11 +205,20 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                           playlist.id,
                           widget.songPath,
                         );
+                        if (context.mounted) {
+                          Provider.of<PlaybackProvider>(
+                            context,
+                            listen: false,
+                          ).removeSongFromQueue(widget.songPath);
+                        }
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Removed from "${playlist.name}"'),
-                              backgroundColor: Colors.grey[800],
+                              content: Text(
+                                'Removed from "${playlist.name}"',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.deepPurpleAccent,
                             ),
                           );
                         }
@@ -220,7 +230,10 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Added to "${playlist.name}"'),
+                              content: Text(
+                                'Added to "${playlist.name}"',
+                                style: TextStyle(color: Colors.white),
+                              ),
                               backgroundColor: Colors.deepPurpleAccent,
                             ),
                           );

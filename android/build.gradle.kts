@@ -1,3 +1,6 @@
+import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.api.AndroidBasePlugin
+
 allprojects {
     repositories {
         google()
@@ -21,4 +24,15 @@ subprojects {
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
+}
+
+subprojects {
+    // Instead of afterEvaluate, we iterate through existing extensions
+    plugins.withType<com.android.build.gradle.api.AndroidBasePlugin> {
+        extensions.configure<com.android.build.gradle.BaseExtension>("android") {
+            if (namespace == null) {
+                namespace = project.group.toString()
+            }
+        }
+    }
 }

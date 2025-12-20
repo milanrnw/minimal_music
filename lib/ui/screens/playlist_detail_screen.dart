@@ -250,10 +250,14 @@ class PlaylistDetailScreen extends StatelessWidget {
                                 playlistId,
                                 song.path,
                               );
+                              playbackProvider.removeSongFromQueue(song.path);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Removed "${song.title}"'),
-                                  backgroundColor: Colors.grey[800],
+                                  content: Text(
+                                    'Removed "${song.title}"',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.deepPurpleAccent,
                                 ),
                               );
                             },
@@ -264,8 +268,11 @@ class PlaylistDetailScreen extends StatelessWidget {
                               albumArt: song.albumArt,
                               albumArtPath: song.albumArtPath,
                               onTap: () {
-                                playbackProvider.setPlaylist(songs, index);
-                                Navigator.push(context, PlayerScreen.route());
+                                playbackProvider.setPlaylist(
+                                  songs,
+                                  index,
+                                  queueId: 'playlist',
+                                );
                               },
                               onMenuTap: () {
                                 showModalBottomSheet(
@@ -313,15 +320,20 @@ class PlaylistDetailScreen extends StatelessWidget {
                                                   playlistId,
                                                   song.path,
                                                 );
+                                            playbackProvider
+                                                .removeSongFromQueue(song.path);
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
                                               SnackBar(
                                                 content: Text(
                                                   'Removed "${song.title}"',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                                 backgroundColor:
-                                                    Colors.grey[800],
+                                                    Colors.deepPurpleAccent,
                                               ),
                                             );
                                           },

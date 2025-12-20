@@ -18,10 +18,27 @@ class PlaybackProvider extends ChangeNotifier {
 
   List<Song> get playlist => _playlist;
 
-  Song? get currentSong =>
-      (currentIndex >= 0 && currentIndex < _playlist.length)
-      ? _playlist[currentIndex]
-      : null;
+  Song? get currentSong {
+    // PREFERRED: Use the MediaItem ID (which is the song path) to find the song.
+    // This is robust against index shifts during playlist modifications.
+    try {
+      if (player.sequenceState?.currentSource?.tag != null) {
+        final tag = player.sequenceState!.currentSource!.tag as MediaItem;
+        final path = tag.id;
+        return _playlist.firstWhere(
+          (s) => s.path == path,
+          orElse: () => _playlist[currentIndex],
+        );
+      }
+    } catch (e) {
+      // Fallback
+    }
+
+    // FALLBACK: Use index
+    return (currentIndex >= 0 && currentIndex < _playlist.length)
+        ? _playlist[currentIndex]
+        : null;
+  }
 
   bool get isActuallyPlaying {
     return player.playing &&
@@ -65,8 +82,11 @@ class PlaybackProvider extends ChangeNotifier {
     List<Song> songs,
     int startIndex, {
     bool autoPlay = true,
+    String? queueId,
   }) async {
     if (songs.isEmpty) return;
+
+    _currentQueueId = queueId;
 
     Duration? initialPos;
     // Check if we are playing the same song from the same playlist context.
@@ -214,6 +234,33 @@ class PlaybackProvider extends ChangeNotifier {
         ? LoopMode.one
         : LoopMode.off;
     await player.setLoopMode(next);
+    notifyListeners();
+  }
+
+  String? _currentQueueId;
+  String? get currentQueueId => _currentQueueId;
+
+  Future<void> removeSongFromQueue(String songPath) async {
+    final index = _playlist.indexWhere((s) => s.path == songPath);
+    if (index == -1) return;
+
+    // Remove from audio source first to let just_audio handle transitions
+    try {
+      if (player.audioSource is ConcatenatingAudioSource) {
+        final source = player.audioSource as ConcatenatingAudioSource;
+        if (index < source.length) {
+          await source.removeAt(index);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) print("Error removing from audio source: $e");
+    }
+
+    // Then update our local playlist
+    if (index < _playlist.length) {
+      _playlist.removeAt(index);
+    }
+
     notifyListeners();
   }
 

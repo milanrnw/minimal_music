@@ -242,11 +242,24 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 ? Colors.redAccent
                                 : Colors.white70,
                           ),
-                          onPressed: () {
-                            Provider.of<SongProvider>(
+                          onPressed: () async {
+                            final songProvider = Provider.of<SongProvider>(
                               context,
                               listen: false,
-                            ).toggleFavorite(currentSong.path);
+                            );
+                            final wasFavorite = songProvider.isFavorite(
+                              currentSong.path,
+                            );
+
+                            await songProvider.toggleFavorite(currentSong.path);
+
+                            // If we just unliked it AND we are playing from "favorites" queue, remove it.
+                            if (wasFavorite &&
+                                playbackService.currentQueueId == 'favorites') {
+                              playbackService.removeSongFromQueue(
+                                currentSong.path,
+                              );
+                            }
                           },
                           tooltip: 'Favorite',
                         ),

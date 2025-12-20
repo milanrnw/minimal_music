@@ -457,10 +457,12 @@ class _HomeScreenState extends State<HomeScreen>
                                   if (songProvider.selectionMode) {
                                     songProvider.toggleSongSelection(song.path);
                                   } else {
-                                    playbackProvider.setPlaylist(songs, index);
-                                    Navigator.push(
-                                      context,
-                                      PlayerScreen.route(),
+                                    playbackProvider.setPlaylist(
+                                      songs,
+                                      index,
+                                      queueId: songProvider.showFavoritesOnly
+                                          ? 'favorites'
+                                          : 'library',
                                     );
                                   }
                                 },
