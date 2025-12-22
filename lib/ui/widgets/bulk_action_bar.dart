@@ -19,10 +19,10 @@ class BulkActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 72,
+      height: 60,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.blueGrey[900],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -37,7 +37,7 @@ class BulkActionBar extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
+              icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
               onPressed: onCancel,
               tooltip: 'Cancel',
             ),
@@ -47,8 +47,8 @@ class BulkActionBar extends StatelessWidget {
                 '$selectedCount selected',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -56,11 +56,17 @@ class BulkActionBar extends StatelessWidget {
             ),
             IconButton(
               onPressed: onSelectAll,
-              icon: const Icon(Icons.select_all, color: Colors.white),
+              icon: Icon(
+                Icons.select_all,
+                color: Theme.of(context).iconTheme.color,
+              ),
               tooltip: 'Select All',
             ),
             PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+              icon: Icon(
+                Icons.more_vert_rounded,
+                color: Theme.of(context).iconTheme.color,
+              ),
               onSelected: (value) {
                 if (value == 'playlist') {
                   onAddToPlaylist();

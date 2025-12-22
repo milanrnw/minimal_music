@@ -19,18 +19,19 @@ class PlaylistsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text(
-          'Create Playlist',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text('Create Playlist', style: TextStyle()),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
+          style: TextStyle(),
+          decoration: InputDecoration(
             hintText: 'Playlist name',
-            hintStyle: TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(
+              color: Theme.of(
+                context,
+              ).textTheme.bodySmall?.color?.withOpacity(0.5),
+            ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.deepPurpleAccent),
             ),
@@ -91,18 +92,18 @@ class PlaylistsScreen extends StatelessWidget {
     final currentSong = playbackProvider.currentSong;
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Playlists', style: TextStyle(color: Colors.white)),
+        title: const Text('Playlists', style: TextStyle()),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white),
+            icon: const Icon(Icons.add),
             onPressed: () => _showCreatePlaylistDialog(context),
           ),
         ],
@@ -114,24 +115,29 @@ class PlaylistsScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.playlist_play_rounded,
                         size: 64,
-                        color: Colors.white54,
+                        color: Theme.of(
+                          context,
+                        ).iconTheme.color?.withOpacity(0.7),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'No playlists yet',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Create your first playlist to get started',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton.icon(
@@ -140,7 +146,9 @@ class PlaylistsScreen extends StatelessWidget {
                         label: const Text('Create Playlist'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurpleAccent,
-                          foregroundColor: Colors.white,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
                             vertical: 12,
@@ -166,7 +174,7 @@ class PlaylistsScreen extends StatelessWidget {
                     );
 
                     return Card(
-                      color: Colors.grey[850],
+                      color: Theme.of(context).cardColor,
                       margin: const EdgeInsets.symmetric(
                         horizontal: 8,
                         vertical: 4,
@@ -179,26 +187,30 @@ class PlaylistsScreen extends StatelessWidget {
                             color: Colors.deepPurpleAccent,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.playlist_play_rounded,
-                            color: Colors.white,
+                            color: Theme.of(context).iconTheme.color,
                             size: 28,
                           ),
                         ),
                         title: Text(
                           playlist.name,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Text(
                           '${songs.length} ${songs.length == 1 ? 'song' : 'songs'}',
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          ),
                         ),
-                        trailing: const Icon(
+                        trailing: Icon(
                           Icons.chevron_right,
-                          color: Colors.white54,
+                          color: Theme.of(
+                            context,
+                          ).iconTheme.color?.withOpacity(0.7),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -210,14 +222,18 @@ class PlaylistsScreen extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              backgroundColor: Colors.grey[900],
+                              backgroundColor: Theme.of(context).cardColor,
                               title: const Text(
                                 'Delete Playlist',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(),
                               ),
                               content: Text(
                                 'Are you sure you want to delete "${playlist.name}"?',
-                                style: const TextStyle(color: Colors.white70),
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.color,
+                                ),
                               ),
                               actions: [
                                 TextButton(

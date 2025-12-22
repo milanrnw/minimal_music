@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player_app/providers/playback_provider.dart';
 import 'package:music_player_app/providers/song_provider.dart';
 import 'package:music_player_app/providers/playlist_provider.dart';
+import 'package:music_player_app/providers/theme_provider.dart';
 import 'package:music_player_app/ui/screens/home_screen.dart';
 
 import 'package:flutter/services.dart';
@@ -27,6 +28,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => PlaybackProvider()),
         ChangeNotifierProvider(create: (_) => SongProvider()),
         ChangeNotifierProvider(create: (_) => PlaylistProvider()),
@@ -41,15 +43,56 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Minimal Music Player',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4527A0), // Deep purple
+          brightness: Brightness.light,
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.grey[900],
+        // brightness: Brightness.light, // Removed as it's part of colorScheme.fromSeed
+        scaffoldBackgroundColor: Colors.grey[100],
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[50],
+          foregroundColor: Colors.black,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        cardColor: Colors.grey[200],
+        iconTheme: IconThemeData(color: Colors.black87),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.black87),
+          bodyMedium: TextStyle(color: Colors.black87),
+          bodySmall: TextStyle(color: Colors.black54),
+        ),
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4527A0), // Deep purple
+          brightness: Brightness.dark,
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        // brightness: Brightness.dark, // Removed as it's part of colorScheme.fromSeed
+        scaffoldBackgroundColor: Colors.grey[900],
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[900],
+          foregroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        cardColor: Colors.grey[800],
+        iconTheme: IconThemeData(color: Colors.white70),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          bodySmall: TextStyle(color: Colors.white70),
+        ),
+      ),
+      themeMode: themeProvider.themeMode,
       home: const HomeScreen(),
     );
   }

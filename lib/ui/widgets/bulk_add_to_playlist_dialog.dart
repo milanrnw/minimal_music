@@ -19,18 +19,19 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text(
-          'Create Playlist',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text('Create Playlist', style: TextStyle()),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
+          style: TextStyle(),
+          decoration: InputDecoration(
             hintText: 'Playlist name',
-            hintStyle: TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(
+              color: Theme.of(
+                context,
+              ).textTheme.bodySmall?.color?.withOpacity(0.5),
+            ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.deepPurpleAccent),
             ),
@@ -93,7 +94,7 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -104,7 +105,7 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Theme.of(context).dividerColor.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -112,8 +113,8 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: Text(
               'Add ${widget.songPaths.length} Songs to Playlist',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -127,12 +128,16 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
                 color: Colors.deepPurpleAccent,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.add, color: Colors.white, size: 24),
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                size: 24,
+              ),
             ),
-            title: const Text(
+            title: Text(
               'Create New Playlist',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -140,14 +145,19 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
               _showCreatePlaylistDialog(context);
             },
           ),
-          const Divider(color: Colors.white10, height: 1),
+          Divider(color: Theme.of(context).dividerColor, height: 1),
           if (playlists.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(40.0),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
               child: Text(
                 'No playlists yet.\\nCreate one to get started!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white54, fontSize: 14),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                  fontSize: 14,
+                ),
               ),
             )
           else
@@ -164,19 +174,16 @@ class _BulkAddToPlaylistDialogState extends State<BulkAddToPlaylistDialog> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.grey[800],
+                        color: Colors.deepPurpleAccent,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.playlist_play_rounded,
-                        color: Colors.white,
+                        color: Theme.of(context).scaffoldBackgroundColor,
                         size: 24,
                       ),
                     ),
-                    title: Text(
-                      playlist.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                    title: Text(playlist.name, style: TextStyle()),
                     onTap: () async {
                       for (final songPath in widget.songPaths) {
                         await playlistProvider.addSongToPlaylist(

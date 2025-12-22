@@ -19,18 +19,19 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text(
-          'Create Playlist',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text('Create Playlist', style: TextStyle()),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
+          style: TextStyle(),
+          decoration: InputDecoration(
             hintText: 'Playlist name',
-            hintStyle: TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(
+              color: Theme.of(
+                context,
+              ).textTheme.bodySmall?.color?.withOpacity(0.5),
+            ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.deepPurpleAccent),
             ),
@@ -103,7 +104,7 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -114,16 +115,16 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Theme.of(context).dividerColor.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: Text(
               'Add to Playlist',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -137,12 +138,16 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                 color: Colors.deepPurpleAccent,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.add, color: Colors.white, size: 24),
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).iconTheme.color,
+                size: 24,
+              ),
             ),
-            title: const Text(
+            title: Text(
               'Create New Playlist',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -150,14 +155,19 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
               _showCreatePlaylistDialog(context);
             },
           ),
-          const Divider(color: Colors.white10, height: 1),
+          Divider(color: Theme.of(context).dividerColor, height: 1),
           if (playlists.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(40.0),
+            Padding(
+              padding: const EdgeInsets.all(40.0),
               child: Text(
                 'No playlists yet.\nCreate one to get started!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white54, fontSize: 14),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                  fontSize: 14,
+                ),
               ),
             )
           else
@@ -180,19 +190,16 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                       decoration: BoxDecoration(
                         color: isInPlaylist
                             ? Colors.deepPurpleAccent
-                            : Colors.grey[800],
+                            : Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
                         Icons.playlist_play_rounded,
-                        color: Colors.white,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         size: 24,
                       ),
                     ),
-                    title: Text(
-                      playlist.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
+                    title: Text(playlist.name, style: TextStyle()),
                     trailing: isInPlaylist
                         ? const Icon(
                             Icons.check_circle,
@@ -216,7 +223,7 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                             SnackBar(
                               content: Text(
                                 'Removed from "${playlist.name}"',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(),
                               ),
                               backgroundColor: Colors.deepPurpleAccent,
                             ),
@@ -232,7 +239,7 @@ class _AddToPlaylistDialogState extends State<AddToPlaylistDialog> {
                             SnackBar(
                               content: Text(
                                 'Added to "${playlist.name}"',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(),
                               ),
                               backgroundColor: Colors.deepPurpleAccent,
                             ),

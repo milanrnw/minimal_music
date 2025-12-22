@@ -30,18 +30,19 @@ class PlaylistDetailScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text(
-          'Rename Playlist',
-          style: TextStyle(color: Colors.white),
-        ),
+        backgroundColor: Theme.of(context).cardColor,
+        title: const Text('Rename Playlist', style: TextStyle()),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
+          style: const TextStyle(),
+          decoration: InputDecoration(
             hintText: 'Playlist name',
-            hintStyle: TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(
+              color: Theme.of(
+                context,
+              ).textTheme.bodySmall?.color?.withOpacity(0.5),
+            ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.deepPurpleAccent),
             ),
@@ -102,34 +103,33 @@ class PlaylistDetailScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(playlist.name, style: const TextStyle(color: Colors.white)),
+        title: Text(playlist.name, style: const TextStyle()),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
+            icon: const Icon(Icons.edit),
             onPressed: () => _showRenameDialog(context, playlist.name),
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   backgroundColor: Colors.grey[900],
-                  title: const Text(
-                    'Delete Playlist',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  title: const Text('Delete Playlist', style: TextStyle()),
                   content: Text(
                     'Are you sure you want to delete "${playlist.name}"?',
-                    style: const TextStyle(color: Colors.white70),
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
                   ),
                   actions: [
                     TextButton(
@@ -147,7 +147,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                           // Close the screen
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
+                            SnackBar(
                               content: Text('Playlist deleted'),
                               backgroundColor: Colors.redAccent,
                             ),
@@ -172,17 +172,19 @@ class PlaylistDetailScreen extends StatelessWidget {
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.music_note_rounded,
                         size: 64,
-                        color: Colors.white54,
+                        color: Theme.of(
+                          context,
+                        ).iconTheme.color?.withOpacity(0.7),
                       ),
                       SizedBox(height: 16),
                       Text(
                         'No songs in this playlist',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -190,7 +192,10 @@ class PlaylistDetailScreen extends StatelessWidget {
                       SizedBox(height: 8),
                       Text(
                         'Add songs using the menu on song tiles',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
                   ),
@@ -210,7 +215,9 @@ class PlaylistDetailScreen extends StatelessWidget {
                         label: const Text('Play All'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurpleAccent,
-                          foregroundColor: Colors.white,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
                           minimumSize: const Size(double.infinity, 48),
                         ),
                       ),
@@ -240,9 +247,11 @@ class PlaylistDetailScreen extends StatelessWidget {
                               color: Colors.redAccent,
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.only(right: 20),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.delete,
-                                color: Colors.white,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
                               ),
                             ),
                             onDismissed: (direction) {
@@ -255,7 +264,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                                 SnackBar(
                                   content: Text(
                                     'Removed "${song.title}"',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(),
                                   ),
                                   backgroundColor: Colors.deepPurpleAccent,
                                 ),
@@ -280,7 +289,7 @@ class PlaylistDetailScreen extends StatelessWidget {
                                   backgroundColor: Colors.transparent,
                                   builder: (context) => Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: const BorderRadius.vertical(
                                         top: Radius.circular(20),
                                       ),
@@ -293,7 +302,9 @@ class PlaylistDetailScreen extends StatelessWidget {
                                           width: 40,
                                           height: 4,
                                           decoration: BoxDecoration(
-                                            color: Colors.white24,
+                                            color: Theme.of(
+                                              context,
+                                            ).dividerColor.withOpacity(0.3),
                                             borderRadius: BorderRadius.circular(
                                               2,
                                             ),
@@ -329,7 +340,9 @@ class PlaylistDetailScreen extends StatelessWidget {
                                                 content: Text(
                                                   'Removed "${song.title}"',
                                                   style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).iconTheme.color,
                                                   ),
                                                 ),
                                                 backgroundColor:

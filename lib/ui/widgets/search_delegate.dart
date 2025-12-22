@@ -16,14 +16,19 @@ class SongSearchDelegate extends SearchDelegate {
     final theme = Theme.of(context);
     return theme.copyWith(
       appBarTheme: theme.appBarTheme.copyWith(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.white54),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(
+          color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+        ),
         border: InputBorder.none,
       ),
       textTheme: theme.textTheme.copyWith(
-        titleLarge: const TextStyle(color: Colors.white, fontSize: 18),
+        titleLarge: TextStyle(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+          fontSize: 18,
+        ),
       ),
     );
   }
@@ -33,7 +38,7 @@ class SongSearchDelegate extends SearchDelegate {
     return [
       if (query.isNotEmpty)
         IconButton(
-          icon: const Icon(Icons.clear, color: Colors.white),
+          icon: Icon(Icons.clear, color: Theme.of(context).iconTheme.color),
           onPressed: () {
             query = '';
           },
@@ -44,7 +49,7 @@ class SongSearchDelegate extends SearchDelegate {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back, color: Colors.white),
+      icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
       onPressed: () {
         close(context, null);
       },
@@ -71,12 +76,17 @@ class SongSearchDelegate extends SearchDelegate {
     }).toList();
 
     return Container(
-      color: Colors.grey[900],
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: results.isEmpty
           ? Center(
               child: Text(
                 query.isEmpty ? "Search your library" : "No results found",
-                style: const TextStyle(color: Colors.white54, fontSize: 16),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                  fontSize: 16,
+                ),
               ),
             )
           : ListView.builder(

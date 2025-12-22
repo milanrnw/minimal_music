@@ -18,33 +18,41 @@ class FolderManagementScreen extends StatelessWidget {
     final detectedFolders = songProvider.managedFolders;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Manage Folders",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.create_new_folder_outlined,
-              color: Colors.white,
+              color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () => _pickFolder(context, songProvider),
           ),
         ],
       ),
       body: detectedFolders.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 "No folders detected",
-                style: TextStyle(color: Colors.white54),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                ),
               ),
             )
           : ListView.builder(
@@ -58,17 +66,22 @@ class FolderManagementScreen extends StatelessWidget {
                 return CheckboxListTile(
                   title: Text(
                     folderName,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
                   ),
                   subtitle: Text(
                     "$songCount songs • $folderPath",
-                    style: const TextStyle(color: Colors.white54, fontSize: 12),
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                      fontSize: 12,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   value: isVisible,
                   activeColor: Colors.deepPurpleAccent,
-                  checkColor: Colors.white,
+                  checkColor: Theme.of(context).colorScheme.onPrimary,
                   onChanged: (bool? value) {
                     songProvider.toggleFolderVisibility(folderPath);
                   },

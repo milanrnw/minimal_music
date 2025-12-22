@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../providers/song_provider.dart';
+import '../../providers/theme_provider.dart';
 import 'folder_management_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -16,16 +17,16 @@ class SettingsScreen extends StatelessWidget {
     final songProvider = Provider.of<SongProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: const Text(
           "Settings",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -51,9 +52,12 @@ class SettingsScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: const Text(
+              subtitle: Text(
                 "Required to scan and play songs. Tap to open settings.",
-                style: TextStyle(color: Colors.white54, fontSize: 12),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                  fontSize: 12,
+                ),
               ),
               leading: const Icon(Icons.error_outline, color: Colors.redAccent),
               onTap: () {
@@ -61,17 +65,17 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
           ListTile(
-            title: const Text(
-              "Manage Library Folders",
-              style: TextStyle(color: Colors.white),
-            ),
-            subtitle: const Text(
+            title: const Text("Manage Library Folders", style: TextStyle()),
+            subtitle: Text(
               "Show/hide specific folders",
-              style: TextStyle(color: Colors.white54, fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                fontSize: 12,
+              ),
             ),
-            trailing: const Icon(
+            trailing: Icon(
               Icons.arrow_forward_ios,
-              color: Colors.white54,
+              color: Theme.of(context).textTheme.bodySmall?.color,
               size: 16,
             ),
             onTap: () {
@@ -79,13 +83,13 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           SwitchListTile(
-            title: const Text(
-              "Hide Short Audio",
-              style: TextStyle(color: Colors.white),
-            ),
-            subtitle: const Text(
+            title: const Text("Hide Short Audio", style: TextStyle()),
+            subtitle: Text(
               "Exclude files shorter than 60 seconds (e.g. WhatsApp audio)",
-              style: TextStyle(color: Colors.white54, fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                fontSize: 12,
+              ),
             ),
             value: songProvider.filterShortSongs,
             onChanged: (value) {
@@ -94,7 +98,61 @@ class SettingsScreen extends StatelessWidget {
             activeColor: Colors.deepPurpleAccent,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           ),
-          const Divider(color: Colors.white10),
+          Divider(color: Theme.of(context).dividerColor),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              "Appearance",
+              style: TextStyle(
+                color: Colors.deepPurpleAccent,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, _) {
+              return Column(
+                children: [
+                  RadioListTile<ThemeMode>(
+                    title: const Text("System Default", style: TextStyle()),
+                    subtitle: Text(
+                      "Follow device theme",
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontSize: 12,
+                      ),
+                    ),
+                    value: ThemeMode.system,
+                    groupValue: themeProvider.themeMode,
+                    onChanged: (mode) {
+                      if (mode != null) themeProvider.setThemeMode(mode);
+                    },
+                    activeColor: Colors.deepPurpleAccent,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: const Text("Light", style: TextStyle()),
+                    value: ThemeMode.light,
+                    groupValue: themeProvider.themeMode,
+                    onChanged: (mode) {
+                      if (mode != null) themeProvider.setThemeMode(mode);
+                    },
+                    activeColor: Colors.deepPurpleAccent,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: const Text("Dark", style: TextStyle()),
+                    value: ThemeMode.dark,
+                    groupValue: themeProvider.themeMode,
+                    onChanged: (mode) {
+                      if (mode != null) themeProvider.setThemeMode(mode);
+                    },
+                    activeColor: Colors.deepPurpleAccent,
+                  ),
+                ],
+              );
+            },
+          ),
+          Divider(color: Theme.of(context).dividerColor),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -107,13 +165,12 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text(
-              "Minimal Music Player",
-              style: TextStyle(color: Colors.white),
-            ),
-            subtitle: const Text(
+            title: const Text("Minimal Music Player", style: TextStyle()),
+            subtitle: Text(
               "Version 1.0.0",
-              style: TextStyle(color: Colors.white54),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
             ),
           ),
         ],

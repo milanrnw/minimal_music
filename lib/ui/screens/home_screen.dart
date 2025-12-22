@@ -85,17 +85,17 @@ class _HomeScreenState extends State<HomeScreen>
     final currentSong = playbackProvider.currentSong;
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: songProvider.selectionMode
           ? null
           : AppBar(
-              backgroundColor: Colors.grey[900],
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
               leading: Builder(
                 builder: (context) => IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.menu_rounded,
-                    color: Colors.white,
+                    color: Theme.of(context).iconTheme.color,
                     size: 28,
                   ),
                   onPressed: () => Scaffold.of(context).openDrawer(),
@@ -103,11 +103,11 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               title: Text(
                 songProvider.showFavoritesOnly ? 'Favorites' : 'Your Library',
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(),
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.search, color: Colors.white),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     showSearch(
                       context: context,
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen>
                   },
                 ),
                 PopupMenuButton<SortOption>(
-                  icon: const Icon(Icons.sort_rounded, color: Colors.white),
+                  icon: const Icon(Icons.sort_rounded),
                   onSelected: (option) {
                     songProvider.sortSongs(option);
                   },
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
       drawer: Drawer(
         child: Container(
-          color: Colors.grey[900],
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Column(
             children: [
               DrawerHeader(
@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen>
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.music_note_rounded,
                         size: 48,
@@ -177,17 +177,24 @@ class _HomeScreenState extends State<HomeScreen>
                   padding: EdgeInsets.zero,
                   children: [
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.refresh_rounded,
-                        color: Colors.white70,
+                        color: Theme.of(context).iconTheme.color,
                       ),
-                      title: const Text(
+                      title: Text(
                         "Refresh Library",
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color,
+                        ),
                       ),
-                      subtitle: const Text(
+                      subtitle: Text(
                         "Scan device for new songs",
-                        style: TextStyle(color: Colors.white38, fontSize: 12),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.color?.withOpacity(0.6),
+                          fontSize: 12,
+                        ),
                       ),
                       onTap: () async {
                         Navigator.pop(context);
@@ -220,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
                             const SnackBar(
                               content: Text(
                                 "✅ Library refreshed",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(),
                               ),
                               backgroundColor: Colors.deepPurpleAccent,
                             ),
@@ -233,14 +240,14 @@ class _HomeScreenState extends State<HomeScreen>
                         Icons.home_rounded,
                         color: !songProvider.showFavoritesOnly
                             ? Colors.deepPurpleAccent
-                            : Colors.white70,
+                            : Theme.of(context).iconTheme.color,
                       ),
                       title: Text(
                         "Home",
                         style: TextStyle(
                           color: !songProvider.showFavoritesOnly
                               ? Colors.deepPurpleAccent
-                              : Colors.white,
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                           fontWeight: !songProvider.showFavoritesOnly
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -256,14 +263,14 @@ class _HomeScreenState extends State<HomeScreen>
                         Icons.favorite_rounded,
                         color: songProvider.showFavoritesOnly
                             ? Colors.redAccent
-                            : Colors.white70,
+                            : Theme.of(context).iconTheme.color,
                       ),
                       title: Text(
                         "Favorites",
                         style: TextStyle(
                           color: songProvider.showFavoritesOnly
                               ? Colors.redAccent
-                              : Colors.white,
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                           fontWeight: songProvider.showFavoritesOnly
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -275,43 +282,34 @@ class _HomeScreenState extends State<HomeScreen>
                       },
                     ),
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.playlist_play_rounded,
-                        color: Colors.white70,
+                        color: Theme.of(context).iconTheme.color,
                       ),
-                      title: const Text(
-                        "Playlists",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      title: const Text("Playlists", style: TextStyle()),
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.push(context, PlaylistsScreen.route());
                       },
                     ),
-                    const Divider(color: Colors.white10),
+                    Divider(color: Theme.of(context).dividerColor),
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.settings_rounded,
-                        color: Colors.white70,
+                        color: Theme.of(context).iconTheme.color,
                       ),
-                      title: const Text(
-                        "Settings",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      title: const Text("Settings", style: TextStyle()),
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.push(context, SettingsScreen.route());
                       },
                     ),
                     ListTile(
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.info_outline_rounded,
-                        color: Colors.white70,
+                        color: Theme.of(context).iconTheme.color,
                       ),
-                      title: const Text(
-                        "About",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      title: const Text("About", style: TextStyle()),
                       onTap: () {
                         Navigator.pop(context);
                         showAboutDialog(
@@ -334,11 +332,16 @@ class _HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
                   "v1.0.0",
-                  style: TextStyle(color: Colors.white24, fontSize: 12),
+                  style: TextStyle(
+                    color: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.color?.withOpacity(0.3),
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],
@@ -359,14 +362,16 @@ class _HomeScreenState extends State<HomeScreen>
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const CircularProgressIndicator(
-                                color: Colors.white,
+                              CircularProgressIndicator(
+                                color: Theme.of(context).iconTheme.color,
                               ),
                               const SizedBox(height: 16),
                               Text(
                                 "Found ${songProvider.scannedSongsCount} songs...",
-                                style: const TextStyle(
-                                  color: Colors.white70,
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.color,
                                   fontSize: 14,
                                 ),
                               ),
@@ -378,33 +383,39 @@ class _HomeScreenState extends State<HomeScreen>
                                 ? 'No favorites yet.\nTry adding some songs.'
                                 : 'No songs found on device.\nTry adding some music files.',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white70,
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.color,
                               fontSize: 16,
                             ),
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.folder_off_rounded,
                                 size: 64,
-                                color: Colors.white54,
+                                color: Theme.of(context).iconTheme.color,
                               ),
                               const SizedBox(height: 16),
-                              const Text(
+                              Text(
                                 'Storage Permission Needed',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.color,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              const Text(
+                              Text(
                                 'Please allow access to scan songs.',
                                 style: TextStyle(
-                                  color: Colors.white70,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.color,
                                   fontSize: 14,
                                 ),
                               ),
@@ -417,7 +428,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 label: const Text("Grant Permission"),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.deepPurpleAccent,
-                                  foregroundColor: Colors.white,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 24,
                                     vertical: 12,
@@ -510,7 +523,11 @@ class _HomeScreenState extends State<HomeScreen>
                                   alignment: Alignment.centerRight,
                                   child: Container(
                                     width: 4,
-                                    color: Colors.white12,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color
+                                        ?.withOpacity(0.15),
                                     margin: const EdgeInsets.only(right: 5),
                                   ),
                                 ),
@@ -617,14 +634,13 @@ class _HomeScreenState extends State<HomeScreen>
                     showDialog(
                       context: context,
                       builder: (dialogContext) => AlertDialog(
-                        backgroundColor: Colors.grey[900],
-                        title: const Text(
-                          'Delete Songs',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        backgroundColor: Theme.of(dialogContext).cardColor,
+                        title: const Text('Delete Songs', style: TextStyle()),
                         content: Text(
                           'Are you sure you want to delete $count song${count > 1 ? 's' : ''} from your device?',
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          ),
                         ),
                         actions: [
                           TextButton(

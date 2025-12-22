@@ -52,14 +52,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
     final showLyrics = playbackService.showLyrics;
 
     if (currentSong == null) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Text(
-            "No song selected",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Center(child: Text("No song selected", style: TextStyle())),
       );
     }
 
@@ -74,10 +69,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
           return Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.width * 0.9,
-            color: Colors.grey[800],
-            child: const Icon(
+            color: Theme.of(context).cardColor,
+            child: Icon(
               Icons.music_note,
-              color: Colors.white70,
+              color: Theme.of(context).textTheme.bodySmall?.color,
               size: 100,
             ),
           );
@@ -93,10 +88,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
           return Container(
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.width * 0.9,
-            color: Colors.grey[800],
-            child: const Icon(
+            color: Theme.of(context).cardColor,
+            child: Icon(
               Icons.music_note,
-              color: Colors.white70,
+              color: Theme.of(context).textTheme.bodySmall?.color,
               size: 100,
             ),
           );
@@ -106,8 +101,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
       artWidget = Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.width * 0.9,
-        color: Colors.grey[800],
-        child: const Icon(Icons.music_note, color: Colors.white70, size: 100),
+        color: Theme.of(context).cardColor,
+        child: Icon(
+          Icons.music_note,
+          color: Theme.of(context).iconTheme.color,
+          size: 100,
+        ),
       );
     }
 
@@ -116,14 +115,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
       direction: DismissDirection.down,
       onDismissed: (_) => Navigator.pop(context),
       child: Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: Colors.white,
+              color: Theme.of(context).iconTheme.color,
               size: 30,
             ),
             onPressed: () => Navigator.pop(context),
@@ -201,8 +200,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     Text(
                       currentSong.title,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -211,7 +210,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     Text(
                       currentSong.artist,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[400], fontSize: 18),
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontSize: 18,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -222,7 +224,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             Icons.lyrics_rounded,
                             color: showLyrics
                                 ? Colors.deepPurpleAccent
-                                : Colors.white70,
+                                : Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () => playbackService.toggleLyrics(),
                           tooltip: 'Lyrics',
@@ -240,7 +242,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                   context,
                                 ).isFavorite(currentSong.path)
                                 ? Colors.redAccent
-                                : Colors.white70,
+                                : Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () async {
                             final songProvider = Provider.of<SongProvider>(
@@ -301,7 +303,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 });
                               },
                               activeColor: Colors.deepPurpleAccent,
-                              inactiveColor: Colors.grey[700],
+                              inactiveColor: Theme.of(context).dividerColor,
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -320,14 +322,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                           : position,
                                     ),
                                     style: TextStyle(
-                                      color: Colors.grey[500],
+                                      color: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall?.color,
                                       fontSize: 13,
                                     ),
                                   ),
                                   Text(
                                     _formatDuration(duration),
                                     style: TextStyle(
-                                      color: Colors.grey[500],
+                                      color: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall?.color,
                                       fontSize: 13,
                                     ),
                                   ),
@@ -351,7 +357,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 Icons.shuffle_rounded,
                                 color: shuffleEnabled
                                     ? Colors.deepPurpleAccent
-                                    : Colors.white70,
+                                    : Theme.of(context).iconTheme.color,
                                 size: 30,
                               ),
                               onPressed: playbackService.toggleShuffle,
@@ -359,9 +365,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.skip_previous_rounded,
-                            color: Colors.white,
+                            color: Theme.of(context).iconTheme.color,
                             size: 40,
                           ),
                           onPressed: playbackService.skipToPrevious,
@@ -376,11 +382,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
                             if (processingState == ProcessingState.loading) {
                               return _buildControlButton(
-                                child: const SizedBox(
+                                child: SizedBox(
                                   width: 40,
                                   height: 40,
                                   child: CircularProgressIndicator(
-                                    color: Colors.white,
+                                    color: Theme.of(context).iconTheme.color,
                                     strokeWidth: 3,
                                   ),
                                 ),
@@ -388,9 +394,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             } else if (!playing) {
                               return _buildControlButton(
                                 onPressed: playbackService.play,
-                                child: const Icon(
+                                child: Icon(
                                   Icons.play_arrow_rounded,
-                                  color: Colors.white,
+                                  color: Theme.of(context).iconTheme.color,
                                   size: 48,
                                 ),
                               );
@@ -398,18 +404,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                 ProcessingState.completed) {
                               return _buildControlButton(
                                 onPressed: playbackService.pause,
-                                child: const Icon(
+                                child: Icon(
                                   Icons.pause_rounded,
-                                  color: Colors.white,
+                                  color: Theme.of(context).iconTheme.color,
                                   size: 48,
                                 ),
                               );
                             } else {
                               return _buildControlButton(
                                 onPressed: playbackService.play,
-                                child: const Icon(
+                                child: Icon(
                                   Icons.replay_rounded,
-                                  color: Colors.white,
+                                  color: Theme.of(context).iconTheme.color,
                                   size: 48,
                                 ),
                               );
@@ -417,9 +423,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.skip_next_rounded,
-                            color: Colors.white,
+                            color: Theme.of(context).iconTheme.color,
                             size: 40,
                           ),
                           onPressed: playbackService.skipToNext,
@@ -434,7 +440,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               LoopMode.one: Icons.repeat_one_rounded,
                             };
                             final color = loopMode == LoopMode.off
-                                ? Colors.white70
+                                ? Theme.of(context).iconTheme.color
                                 : Colors.deepPurpleAccent;
 
                             return IconButton(
@@ -541,11 +547,11 @@ class _LyricsCardState extends State<_LyricsCard> {
         width: widget.size,
         height: widget.size,
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Theme.of(context).shadowColor.withOpacity(0.3),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -560,7 +566,7 @@ class _LyricsCardState extends State<_LyricsCard> {
                 Text(
                   "Lyrics",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -589,10 +595,17 @@ class _LyricsCardState extends State<_LyricsCard> {
                       controller: _controller,
                       maxLines: null,
                       expands: true,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                      decoration: const InputDecoration(
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
                         hintText: "Paste lyrics here...",
-                        hintStyle: TextStyle(color: Colors.white38),
+                        hintStyle: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.color?.withOpacity(0.5),
+                        ),
                         border: InputBorder.none,
                       ),
                     )
@@ -602,8 +615,10 @@ class _LyricsCardState extends State<_LyricsCard> {
                             "No lyrics available.\nTap edit to add them.",
                         style: TextStyle(
                           color: _lyrics == null
-                              ? Colors.white38
-                              : Colors.white,
+                              ? Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.color?.withOpacity(0.5)
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                           fontSize: 14,
                           height: 1.5,
                         ),

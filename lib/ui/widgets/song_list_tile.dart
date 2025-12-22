@@ -41,10 +41,10 @@ class SongListTile extends StatelessWidget {
           return Container(
             width: 55,
             height: 55,
-            color: Colors.grey[800],
-            child: const Icon(
+            color: Theme.of(context).cardColor,
+            child: Icon(
               Icons.music_note,
-              color: Colors.white70,
+              color: Theme.of(context).textTheme.bodySmall?.color,
               size: 28,
             ),
           );
@@ -60,10 +60,10 @@ class SongListTile extends StatelessWidget {
           return Container(
             width: 55,
             height: 55,
-            color: Colors.grey[800],
-            child: const Icon(
+            color: Theme.of(context).cardColor,
+            child: Icon(
               Icons.music_note,
-              color: Colors.white70,
+              color: Theme.of(context).textTheme.bodySmall?.color,
               size: 28,
             ),
           );
@@ -73,8 +73,12 @@ class SongListTile extends StatelessWidget {
       artWidget = Container(
         width: 55,
         height: 55,
-        color: Colors.grey[800],
-        child: const Icon(Icons.music_note, color: Colors.white70, size: 28),
+        color: Theme.of(context).cardColor,
+        child: Icon(
+          Icons.music_note,
+          color: Theme.of(context).iconTheme.color,
+          size: 28,
+        ),
       );
     }
 
@@ -103,9 +107,9 @@ class SongListTile extends StatelessWidget {
                       color: Colors.deepPurpleAccent.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.check_rounded,
-                      color: Colors.white,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       size: 28,
                     ),
                   ),
@@ -118,8 +122,8 @@ class SongListTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color,
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                     ),
@@ -143,9 +147,9 @@ class SongListTile extends StatelessWidget {
             if (onMenuTap != null && !selectionMode) ...[
               const SizedBox(width: 8),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.more_vert,
-                  color: Colors.white70,
+                  color: Theme.of(context).iconTheme.color,
                   size: 20,
                 ),
                 onPressed: onMenuTap,
